@@ -1091,10 +1091,15 @@ footer p {
 }
 
 .service-panel-content p {
+    .service-panel-content p {
     margin: 0;
     color: #444;
     font-size: 16px;
     line-height: 1.8;
+    text-align: left;
+    text-wrap: pretty;
+    max-width: 38ch;
+}
 }
 
 @media (max-width: 900px) and (orientation: portrait), (max-width: 700px) {
@@ -1213,4 +1218,17 @@ p,
 li {
     text-align: justify;
     text-justify: inter-word;
+}
+
+/* About */
+
+.about-content p,
+.info-card p,
+.service-panel-content p,
+.post-caption,
+.contact-info-area p {
+    text-align: justify;
+    text-justify: inter-word;
+    word-spacing: -2px;
+    line-height: 1.9;
 }
