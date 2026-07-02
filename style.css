@@ -1209,3 +1209,8 @@ img {
     -webkit-user-drag: none;
     user-select: none;
 }
+p,
+li {
+    text-align: justify;
+    text-justify: inter-word;
+}
