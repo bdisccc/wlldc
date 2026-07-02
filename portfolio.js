@@ -1,101 +1,73 @@
 document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".project-swiper").forEach(function (slider) {
+        const slideCount = slider.querySelectorAll(".swiper-slide").length;
+        const usesPdfPages = Boolean(slider.querySelector('img[src*="profile-2024"]'));
+        slider.classList.toggle("pdf-project-swiper", usesPdfPages);
+        slider.classList.toggle("single-slide", slideCount === 1);
 
-    /* =========================
-       SWIPER SLIDER
-    ========================= */
-
-    new Swiper(".project-swiper", {
-        loop: true,
-        grabCursor: true,
-        slidesPerView: 1,
-        spaceBetween: 0,
-
-        pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-        },
-
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        },
-    });
-
-    /* =========================
-   MOBILE HAMBURGER TOGGLE FIX
-========================= */
-
-const navButton = document.querySelector(".navbar-toggler");
-const navbarMenu = document.querySelector("#navbarSupportedContent");
-
-navButton.addEventListener("click", function () {
-    if (navbarMenu.classList.contains("show")) {
-        navbarMenu.classList.remove("show");
-    } else {
-        navbarMenu.classList.add("show");
-    }
-});
-
-    /* =========================
-       LIKE BUTTON
-    ========================= */
-
-    window.likePost = function(button) {
-
-        const post = button.closest(".insta-post");
-
-        const likeCount = post.querySelector(".like-count span");
-
-        const icon = button.querySelector("i");
-
-        let count = parseInt(likeCount.innerText);
-
-        button.classList.add("liked");
-
-        icon.classList.remove("fa-regular");
-        icon.classList.add("fa-solid");
-
-        likeCount.innerText = count + 1;
-    };
-
-    /* =========================
-       SAVE BUTTON
-    ========================= */
-
-    const saveButtons = document.querySelectorAll(".save-btn");
-
-    saveButtons.forEach(button => {
-
-        button.addEventListener("click", () => {
-
-            const icon = button.querySelector("i");
-
-            button.classList.toggle("active");
-
-            if (button.classList.contains("active")) {
-
-                icon.classList.remove("fa-regular");
-                icon.classList.add("fa-solid");
-
-            } else {
-
-                icon.classList.remove("fa-solid");
-                icon.classList.add("fa-regular");
-            }
+        new Swiper(slider, {
+            loop: slideCount > 1,
+            grabCursor: true,
+            slidesPerView: 1,
+            spaceBetween: 0,
+            pagination: {
+                el: slider.querySelector(".swiper-pagination"),
+                clickable: true
+            },
+            navigation: {
+                nextEl: slider.querySelector(".swiper-button-next"),
+                prevEl: slider.querySelector(".swiper-button-prev")
+            },
+            allowTouchMove: slideCount > 1
         });
     });
 
+    const navButton = document.querySelector(".navbar-toggler");
+    const navbarMenu = document.querySelector("#navbarSupportedContent");
+
+    if (navButton && navbarMenu) {
+        navButton.addEventListener("click", function () {
+            const isOpen = navbarMenu.classList.toggle("show");
+            navButton.setAttribute("aria-expanded", String(isOpen));
+        });
+    }
 });
-/* =========================
-   COPY WEBSITE LINK
-========================= */
+
+window.likePost = function (button) {
+    const post = button.closest(".insta-post");
+    const likeCount = post.querySelector(".like-count span");
+    const icon = button.querySelector("i");
+    const count = Number.parseInt(likeCount.textContent, 10) || 0;
+
+    button.classList.add("liked");
+    icon.classList.remove("fa-regular");
+    icon.classList.add("fa-solid");
+
+    likeCount.textContent = String(count + 1);
+    button.setAttribute("aria-label", "Like project");
+};
 
 window.copyWebsiteLink = function (button) {
-    navigator.clipboard.writeText(window.location.href);
+    const post = button.closest(".insta-post");
+    const projectUrl = new URL(window.location.href);
+    projectUrl.hash = post.id;
 
-    button.classList.add("copied");
-
-    setTimeout(() => {
-        button.classList.remove("copied");
-    }, 1800);
+    navigator.clipboard.writeText(projectUrl.href).then(function () {
+        button.classList.add("copied");
+        window.setTimeout(function () {
+            button.classList.remove("copied");
+        }, 1800);
+    });
 };
+
+document.addEventListener("contextmenu", function (event) {
+    if (event.target.tagName === "IMG") {
+        event.preventDefault();
+    }
+});
+
+document.addEventListener("dragstart", function (event) {
+    if (event.target.tagName === "IMG") {
+        event.preventDefault();
+    }
+});

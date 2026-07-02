@@ -16,6 +16,25 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
+<!-- No Copying or Saving Image -->
+<script>
+document.addEventListener("contextmenu", function (e) {
+    if (e.target.tagName === "IMG") {
+        e.preventDefault();
+    }
+});
+
+document.addEventListener("dragstart", function (e) {
+    if (e.target.tagName === "IMG") {
+        e.preventDefault();
+    }
+});
+
+document.querySelectorAll("img").forEach(img => {
+    img.setAttribute("draggable", "false");
+});
+</script>
+
 <body>
 
     <!-- HERO SECTION -->
